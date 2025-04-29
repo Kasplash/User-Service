@@ -21,4 +21,13 @@ public class UserService {
     public Optional<Person> get(long ssn) {
         return userRepository.findById(ssn);
     }
+
+    public boolean delete(long ssn){
+        if(userRepository.existsById(ssn)) {
+            userRepository.deleteById(ssn);
+            return true;
+        }
+        return false;
+    }
+
 }
