@@ -1,12 +1,14 @@
 package com.project.User_Service.controllers;
 
+import com.project.User_Service.exeptions.UserAlreadyExistsExeption;
+import com.project.User_Service.exeptions.UserNotExistsException;
 import com.project.User_Service.models.Entities.Person;
 import com.project.User_Service.models.RequestDTO.PersonRequest;
 
 import com.project.User_Service.services.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public Person createPerson(@RequestBody PersonRequest user) {
-        return userService.save(user);
+    public Person createPerson(@RequestBody PersonRequest person) {
+        return userService.save(person);
     }
 
     @GetMapping
@@ -29,14 +31,22 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deletePerson(@RequestParam long ssn){
-        if(userService.delete(ssn)){
-            return new ResponseEntity<>(ssn + " deleted", HttpStatus.ACCEPTED);
-        }
-        return new ResponseEntity<>("Failed to delete: " + ssn,HttpStatus.BAD_REQUEST);
+    public void deletePerson(@RequestParam long ssn){
+        userService.delete(ssn); // is a void action so no data to return
     }
 
-    @PutMapping
-    public void putPerson(){
+    @PatchMapping
+    public ResponseEntity<String> patchAddress(@RequestBody PersonRequest person){
+        return new ResponseEntity<>("Updated entries: " + userService.updateAddress(person), HttpStatus.CREATED);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsExeption.class)
+    public ResponseEntity<?> handleUserAlreadyExisting(UserAlreadyExistsExeption ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNotExistsException.class)
+    public ResponseEntity<?> handleNoUserExeption(UserNotExistsException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
