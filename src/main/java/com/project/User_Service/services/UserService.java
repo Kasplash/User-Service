@@ -5,7 +5,6 @@ import com.project.User_Service.exeptions.UserAlreadyExistsExeption;
 import com.project.User_Service.exeptions.UserNotExistsException;
 import com.project.User_Service.models.Entities.Person;
 import com.project.User_Service.models.RequestDTO.PersonRequest;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
