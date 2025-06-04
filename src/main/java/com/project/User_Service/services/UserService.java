@@ -19,6 +19,7 @@ public class UserService {
     public Person save(PersonRequest person) {
         long ssn = person.ssn();
         Person personEntity = new Person(ssn, person.name(), person.address(), person.age());
+
         if(userRepository.existsById(person.ssn())){
             throw new UserAlreadyExistsExeption("User is already present");
         }
@@ -39,5 +40,4 @@ public class UserService {
     public int updateAddress(PersonRequest person){
         return userRepository.updateAddress(person.address(), person.ssn());
     }
-
 }

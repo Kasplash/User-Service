@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @ExceptionHandler(UserNotExistsException.class)
-    public ResponseEntity<?> handleNoUserExeption(UserNotExistsException ex){
+    public ResponseEntity<?> handleNoUserException(UserNotExistsException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
