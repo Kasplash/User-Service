@@ -17,6 +17,8 @@ jobs:
           java-version: '22'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Dry run gradle
+        run: ./gradlew war --dry-run ./gradlew war -i
       - name: Build with Gradle
         run: ./gradlew build
       - name: Login to docker hub
