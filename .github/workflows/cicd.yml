@@ -15,8 +15,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '22'
-      - name: Build Project
-        run: mvn clean install -DskipTests
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build
       - name: Login to docker hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
       - name: Build docker image
