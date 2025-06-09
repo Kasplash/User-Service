@@ -17,12 +17,10 @@ jobs:
           java-version: '22'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Dry run gradle
-        run: ./gradlew war --dry-run
-      - name: gradle build info
-        run: ./gradlew war -i
       - name: Build with Gradle
         run: ./gradlew build
+      - name: gradle build info
+        run: ls -R build/
       - name: Login to docker hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
       - name: Build docker image
