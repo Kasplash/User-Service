@@ -17,8 +17,19 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Pull Docker image on EC2
+      - name: Pull Docker image on EC2 and run
         run: |
+          # pull
           ssh -o StrictHostKeyChecking=no ubuntu@${{secrets.EC2_PUBLIC_IP}} "
+            #pull docker image
             sudo docker pull andr266/user-service:latest
+          
+            # stop containers
+            docker stop user-service || true
+            docker rm user-service || true
+          
+            docker run -d \
+              --name user-service \
+              -p 8080:8080 \
+              andr266/user-service:latest
           "
