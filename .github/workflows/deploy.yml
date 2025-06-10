@@ -25,10 +25,10 @@ jobs:
             sudo docker pull andr266/user-service:latest
           
             # stop containers
-            docker stop user-service || true
-            docker rm user-service || true
+            sudo docker stop user-service || true
+            sudo docker rm user-service || true
           
-            docker run -d \
+            sudo docker run -d \
               --name user-service \
               -p 8080:8080 \
               andr266/user-service:latest
