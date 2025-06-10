@@ -1,8 +1,7 @@
-name: CICD
+name: build
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -28,13 +27,3 @@ jobs:
       - name: Publish image to docker hub
         run: docker push andr266/user-service:latest
 
-  deploy:
-    needs: build
-    runs-on: [aws-ec2]
-    steps:
-      - name: Pull Image from docker hub
-        run: docker pull andr266/user-service:latest
-      - name: Delete old container
-        run: docker rm -f user-service-container
-      - name: Run docker container
-        run: docker run -d -p 8080:8080 --name user-service-container andr266/user-service
