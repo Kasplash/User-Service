@@ -1,11 +1,11 @@
-name: deploy
+name: Deploy to EC2 Kubernetes
 
 on:
   workflow_dispatch:
 
 jobs:
-
   deploy:
+    name: Deploy to EC2 with k3s
     runs-on: ubuntu-latest
 
     steps:
@@ -13,23 +13,24 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-
-      - name: Pull Docker image on EC2 and run
         run: |
-          # pull
-          ssh -o StrictHostKeyChecking=no ubuntu@${{secrets.EC2_PUBLIC_IP}} "
-            #pull docker image
-            sudo docker pull andr266/user-service:latest
-          
-            # stop containers
-            sudo docker stop user-service || true
-            sudo docker rm user-service || true
-          
-            sudo docker run -d \
-              --name user-service \
-              -p 8080:8080 \
-              andr266/user-service:latest
-          "
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
+      - name: Create DB Secret on EC2 Kubernetes
+        run: |
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << EOF
+          export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+          kubectl create secret generic db-secret \
+            --from-literal=DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Copy Deployment YAML to EC2
+        run: |
+          scp -i key.pem -o StrictHostKeyChecking=no k8s/user-service.yaml ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/user-service.yaml
+
+      - name: Apply Kubernetes Deployment
+        run: |
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+            kubectl apply -f /home/ubuntu/user-service.yaml
