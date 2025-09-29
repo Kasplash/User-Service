@@ -19,7 +19,7 @@ jobs:
 
       - name: Create DB Secret on EC2 Kubernetes
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << EOF
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }}
           export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
           kubectl create secret generic db-secret \
             --from-literal=DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
@@ -31,6 +31,6 @@ jobs:
 
       - name: Apply Kubernetes Deployment
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }}
             export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
             kubectl apply -f /home/ubuntu/user-service.yaml
