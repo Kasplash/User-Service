@@ -20,7 +20,9 @@ jobs:
       - name: Create DB Secret on EC2 Kubernetes
         run: |
           ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }}
-    
+          # copy kubeconfig to a temp file and rewrite server address
+          sed "s/127\.0\.0\.1/{{ secrets.EC2_PUBLIC_IP }}/" /etc/rancher/k3s/k3s.yaml > ~/kubeconfig-remote.yaml
+          export KUBECONFIG=~/kubeconfig-remote.yaml
           kubectl create secret generic db-secret \
             --from-literal=DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
             --dry-run=client -o yaml | kubectl apply -f -
