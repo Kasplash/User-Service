@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # update deployment to use the freshly pushed image
-            IMAGE=docker.io/$andr266/user-service:$:latest
+            IMAGE=docker.io/$andr266/user-service:latest
             sudo k3s kubectl set image deployment/user-service user-service=$IMAGE --record ||
             sudo k3s kubectl apply -f ~/deploy/k8s/deployment.yaml
             sudo k3s kubectl rollout status deployment/user-service --timeout=120s
