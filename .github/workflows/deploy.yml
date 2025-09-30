@@ -15,7 +15,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_PUBLIC_IP }}
           username: ubuntu
-          key: ${{ EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # update deployment to use the freshly pushed image
             IMAGE=docker.io/$andr266/spring-app:$:latest
