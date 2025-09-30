@@ -5,34 +5,21 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to EC2 with k3s
+    needs: build-and-push
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up SSH key
-        run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
-          chmod 600 key.pem
-
-      - name: Create DB Secret on EC2 Kubernetes
-        run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }}
-          # copy kubeconfig to a temp file and rewrite server address
-          sed "s/127\.0\.0\.1/{{ secrets.EC2_PUBLIC_IP }}/" /etc/rancher/k3s/k3s.yaml > ~/kubeconfig-remote.yaml
-          export KUBECONFIG=~/kubeconfig-remote.yaml
-          kubectl create secret generic db-secret \
-            --from-literal=DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Copy Deployment YAML to EC2
-        run: |
-          scp -i key.pem -o StrictHostKeyChecking=no k8s/user-service.yaml ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/home/ubuntu/user-service.yaml
-
-      - name: Apply Kubernetes Deployment
-        run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_PUBLIC_IP }}
-            export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-            kubectl apply -f /home/ubuntu/user-service.yaml
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_PUBLIC_IP }}
+          username: ubuntu
+          key: ${{ EC2_SSH_KEY }}
+          script: |
+            # update deployment to use the freshly pushed image
+            IMAGE=docker.io/$andr266/spring-app:$:latest
+            sudo k3s kubectl set image deployment/spring-app spring-app=$IMAGE --record || \
+              sudo k3s kubectl apply -f ~/deploy/k8s/deployment.yaml
+            sudo k3s kubectl rollout status deployment/spring-app --timeout=120s
