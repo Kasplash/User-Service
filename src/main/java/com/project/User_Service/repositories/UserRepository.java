@@ -1,4 +1,4 @@
-package com.project.User_Service.Repositories;
+package com.project.User_Service.repositories;
 
 import com.project.User_Service.models.Entities.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface UserRepository extends JpaRepository<Person,Long> {
     @Modifying
     @Transactional
-    @Query("UPDATE Person p SET p.address = :address WHERE p.ssn = :ssn")
-    int updateAddress(@Param("address") String address, @Param("ssn") long ssn);
+    @Query("UPDATE Person p SET p.address = :address, p.name = :name, p.age = :age WHERE p.ssn = :ssn")
+    int updatePerson(@Param("ssn") long ssn, @Param("address") String address, @Param("name") String name, @Param("age") int age);
 }

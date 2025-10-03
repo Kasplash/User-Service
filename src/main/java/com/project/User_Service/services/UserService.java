@@ -1,6 +1,6 @@
 package com.project.User_Service.services;
 
-import com.project.User_Service.Repositories.UserRepository;
+import com.project.User_Service.repositories.UserRepository;
 import com.project.User_Service.exeptions.UserAlreadyExistsExeption;
 import com.project.User_Service.exeptions.UserNotExistsException;
 import com.project.User_Service.models.Entities.Person;
@@ -15,11 +15,14 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public Person save(PersonRequest person) {
-        long ssn = person.ssn();
-        Person personEntity = new Person(ssn, person.name(), person.address(), person.age());
+    public Person save(PersonRequest personRequest) {
+        long ssn = personRequest.ssn();
+        String name = personRequest.name();
+        String address = personRequest.address();
+        int age = personRequest.age();
+        Person personEntity = new Person(ssn, name, address, age);
 
-        if(userRepository.existsById(person.ssn())){
+        if(userRepository.existsById(ssn)){
             throw new UserAlreadyExistsExeption("User is already present");
         }
         return userRepository.save(personEntity);
@@ -37,6 +40,10 @@ public class UserService {
     }
 
     public int updateAddress(PersonRequest person){
-        return userRepository.updateAddress(person.address(), person.ssn());
+        int updatedEntries = userRepository.updatePerson(person.ssn(),person.address(), person.name(), person.age());
+        if(updatedEntries == 0) {
+            throw new UserNotExistsException("No entries to update");
+        }
+        return updatedEntries;
     }
 }

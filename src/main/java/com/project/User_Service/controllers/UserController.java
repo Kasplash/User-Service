@@ -36,8 +36,9 @@ public class UserController {
     }
 
     @PatchMapping
-    public ResponseEntity<String> patchAddress(@RequestBody PersonRequest person){
-        return new ResponseEntity<>("Updated entries: " + userService.updateAddress(person), HttpStatus.CREATED);
+    public ResponseEntity<String> updatePerson(@RequestBody PersonRequest person){
+        int updatedEntries = userService.updateAddress(person);
+        return new ResponseEntity<>("Updated entries: " + updatedEntries, HttpStatus.CREATED);
     }
 
     @ExceptionHandler(UserAlreadyExistsExeption.class)
