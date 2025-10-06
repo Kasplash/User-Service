@@ -7,6 +7,7 @@ spec:
   selector:
     app: user-service
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
+    - name: http
+      protocol: TCP
+      port: 80         # external port
+      targetPort: 8080 # matches containerPort
