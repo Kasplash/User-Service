@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service
-  labels:
-    app: user-service
 spec:
   replicas: 2
   selector:
@@ -16,18 +14,6 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: docker.io/andr266/user-service:latest
+          image: 407058813153.dkr.ecr.eu-north-1.amazonaws.com/user-service:latest
           ports:
             - containerPort: 8080
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: user-service
-spec:
-  type: LoadBalancer
-  ports:
-    - port: 80
-      targetPort: 8080
-  selector:
-    app: user-service
