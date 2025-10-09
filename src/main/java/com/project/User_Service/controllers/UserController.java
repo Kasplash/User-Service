@@ -1,12 +1,12 @@
 package com.project.User_Service.controllers;
 
+
 import com.project.User_Service.exeptions.UserAlreadyExistsExeption;
 import com.project.User_Service.exeptions.UserNotExistsException;
 import com.project.User_Service.models.Entities.Person;
 import com.project.User_Service.models.RequestDTO.PersonRequest;
 
 import com.project.User_Service.services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("User")
+@RequestMapping("/user")
 public class UserController {
+
+
     @Autowired
     UserService userService;
 
