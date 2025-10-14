@@ -17,3 +17,9 @@ spec:
           image: 407058813153.dkr.ecr.eu-north-1.amazonaws.com/user-service:latest
           ports:
             - containerPort: 8080
+          env:
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: ADMIN_PASSWORD
