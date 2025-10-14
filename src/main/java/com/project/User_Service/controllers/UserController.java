@@ -3,8 +3,8 @@ package com.project.User_Service.controllers;
 
 import com.project.User_Service.exeptions.UserAlreadyExistsExeption;
 import com.project.User_Service.exeptions.UserNotExistsException;
-import com.project.User_Service.models.Entities.Person;
-import com.project.User_Service.models.RequestDTO.PersonRequest;
+import com.project.User_Service.models.entities.Person;
+import com.project.User_Service.models.requestDTO.PersonRequest;
 
 import com.project.User_Service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

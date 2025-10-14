@@ -1,6 +1,6 @@
 package com.project.User_Service.repositories;
 
-import com.project.User_Service.models.Entities.Person;
+import com.project.User_Service.models.entities.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
