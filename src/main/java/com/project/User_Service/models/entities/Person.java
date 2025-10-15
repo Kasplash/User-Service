@@ -1,5 +1,6 @@
 package com.project.User_Service.models.entities;
 
+import com.project.User_Service.exeptions.UserIdIsNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -15,6 +16,7 @@ public class Person {
     }
 
     public Person(long ssn, String name, String address, int age) {
+        validate(ssn);
         setSsn(ssn);
         setName(name);
         setAddress(address);
@@ -51,5 +53,10 @@ public class Person {
 
     public void setAge(int age) {
         this.age = age;
+    }
+    public void validate(long ssn){
+        if(ssn == 0){
+            throw new UserIdIsNull("ssn cannot be unidentified");
+        }
     }
 }

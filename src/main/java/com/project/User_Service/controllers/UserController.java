@@ -2,11 +2,13 @@ package com.project.User_Service.controllers;
 
 
 import com.project.User_Service.exeptions.UserAlreadyExistsExeption;
+import com.project.User_Service.exeptions.UserIdIsNull;
 import com.project.User_Service.exeptions.UserNotExistsException;
 import com.project.User_Service.models.entities.Person;
 import com.project.User_Service.models.requestDTO.PersonRequest;
 
 import com.project.User_Service.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public Person createPerson(@RequestBody PersonRequest person) {
+    public Person createPerson(@Valid @RequestBody PersonRequest person) {
         return userService.save(person);
     }
 
@@ -50,6 +52,11 @@ public class UserController {
 
     @ExceptionHandler(UserNotExistsException.class)
     public ResponseEntity<?> handleNoUserException(UserNotExistsException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserIdIsNull.class)
+    public ResponseEntity<?> handleUserIdIsNull(UserIdIsNull ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }

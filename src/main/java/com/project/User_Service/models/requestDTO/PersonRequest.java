@@ -1,5 +1,7 @@
 package com.project.User_Service.models.requestDTO;
 
 
-public record PersonRequest(long ssn, String name, String address, int age) {
+import jakarta.validation.constraints.NotNull;
+
+public record PersonRequest(@NotNull long ssn,@NotNull String name, @NotNull String address, @NotNull int age) {
 }
