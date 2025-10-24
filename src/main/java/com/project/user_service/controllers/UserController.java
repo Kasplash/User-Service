@@ -5,7 +5,7 @@ import com.project.user_service.exeptions.UserAlreadyExistsExeption;
 import com.project.user_service.exeptions.UserIdIsNull;
 import com.project.user_service.exeptions.UserNotExistsException;
 import com.project.user_service.models.entities.Person;
-import com.project.user_service.models.requestDTO.PersonRequest;
+import com.project.user_service.models.requests.PersonRequest;
 
 import com.project.user_service.services.UserService;
 import jakarta.validation.Valid;

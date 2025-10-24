@@ -54,8 +54,9 @@ public class Person {
     public void setAge(int age) {
         this.age = age;
     }
-    public void validate(long ssn){
-        if(ssn == 0){
+
+    public void validate(long ssn) {
+        if (ssn == 0) {
             throw new UserIdIsNull("ssn cannot be unidentified");
         }
     }
